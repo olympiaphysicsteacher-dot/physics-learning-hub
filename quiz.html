@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Practice Test</title>
+</head>
+<body style="font-family: Arial; text-align: center;">
+
+<h1>📝 Practice Test</h1>
+
+<button onclick="startQuiz()">Start Quiz</button>
+
+<div id="quiz-box"></div>
+
+<script>
+const questions = [
+  {
+    question: "What is velocity?",
+    options: ["Speed with direction", "Distance/time", "Force", "Energy"],
+    answer: 0
+  },
+  {
+    question: "Unit of acceleration?",
+    options: ["m/s", "m/s²", "N", "kg"],
+    answer: 1
+  }
+];
+
+let current = 0;
+let score = 0;
+
+function startQuiz() {
+  current = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  let q = questions[current];
+
+  let html = "<h3>" + q.question + "</h3>";
+
+  for (let i = 0; i < q.options.length; i++) {
+    html += "<button onclick='checkAnswer(" + i + ")'>" + q.options[i] + "</button><br><br>";
+  }
+
+  document.getElementById("quiz-box").innerHTML = html;
+}
+
+function checkAnswer(choice) {
+  if (choice === questions[current].answer) {
+    score++;
+    alert("Correct!");
+  } else {
+    alert("Wrong!");
+  }
+
+  current++;
+
+  if (current < questions.length) {
+    showQuestion();
+  } else {
+    document.getElementById("quiz-box").innerHTML =
+      "<h2>Your score: " + score + "/" + questions.length + "</h2>";
+  }
+}
+</script>
+
+<br>
+<a href="index.html">⬅ Back</a>
+
+</body>
+</html>
