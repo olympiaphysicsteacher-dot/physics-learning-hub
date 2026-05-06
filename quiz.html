@@ -138,21 +138,29 @@ function showQuestion() {
 
 // ✅ CHECK ANSWER
 function checkAnswer(choice) {
-  if (choice === filteredQuestions[current].answer) {
+  let q = filteredQuestions[current];
+
+  let html = "";
+
+  if (choice === q.answer) {
     score++;
-    alert("✅ Correct!");
+    html += "<p class='correct'>✅ Correct!</p>";
   } else {
-    alert("❌ Wrong!");
+    html += "<p class='wrong'>❌ Wrong!</p>";
   }
+
+  // show explanation
+  html += `<p class="explanation">${q.explanation}</p>`;
 
   current++;
 
   if (current < filteredQuestions.length) {
-    showQuestion();
+    html += `<button onclick="showQuestion()">Next Question</button>`;
   } else {
-    document.getElementById("quiz-box").innerHTML =
-      `<h2>Final Score: ${score}/${filteredQuestions.length}</h2>`;
+    html += `<h2>Final Score: ${score}/${filteredQuestions.length}</h2>`;
   }
+
+  document.getElementById("quiz-box").innerHTML = html;
 }
 
 </script>
