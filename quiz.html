@@ -7,62 +7,137 @@
 
 <h1>📝 Practice Test</h1>
 
-<button onclick="startQuiz()">Start Quiz</button>
+<!-- 🎯 CONTROLS -->
+<div>
+  <label>Topic:</label>
+  <select id="topic">
+    <option value="all">All</option>
+    <option value="kinematics">Kinematics</option>
+    <option value="forces">Forces</option>
+  </select>
+
+  <label>Difficulty:</label>
+  <select id="difficulty">
+    <option value="all">All</option>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+
+  <br><br>
+  <button onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<hr>
 
 <div id="quiz-box"></div>
 
 <script>
+
+// 🔥 QUESTION BANK
 const questions = [
   {
+    topic: "kinematics",
+    difficulty: "easy",
     question: "What is velocity?",
     options: ["Speed with direction", "Distance/time", "Force", "Energy"],
     answer: 0
   },
   {
+    topic: "kinematics",
+    difficulty: "medium",
     question: "Unit of acceleration?",
     options: ["m/s", "m/s²", "N", "kg"],
+    answer: 1
+  },
+  {
+    topic: "forces",
+    difficulty: "easy",
+    question: "Unit of force?",
+    options: ["N", "kg", "m/s", "J"],
+    answer: 0
+  },
+  {
+    topic: "forces",
+    difficulty: "medium",
+    question: "What is Newton's Second Law?",
+    options: ["F = ma", "E = mc²", "V = IR", "p = mv"],
+    answer: 0
+  },
+  {
+    topic: "forces",
+    difficulty: "hard",
+    question: "If mass doubles, acceleration becomes?",
+    options: ["Double", "Half", "Same", "Zero"],
     answer: 1
   }
 ];
 
+let filteredQuestions = [];
 let current = 0;
 let score = 0;
 
+// 🎯 START QUIZ
 function startQuiz() {
+  const topic = document.getElementById("topic").value;
+  const difficulty = document.getElementById("difficulty").value;
+
+  // 🔍 FILTER
+  filteredQuestions = questions.filter(q => {
+    return (topic === "all" || q.topic === topic) &&
+           (difficulty === "all" || q.difficulty === difficulty);
+  });
+
+  // 🎲 RANDOMIZE (shuffle)
+  filteredQuestions.sort(() => Math.random() - 0.5);
+
+  // limit to 5 questions (optional)
+  filteredQuestions = filteredQuestions.slice(0, 5);
+
   current = 0;
   score = 0;
+
+  if (filteredQuestions.length === 0) {
+    document.getElementById("quiz-box").innerHTML =
+      "<p>No questions found. Try different filters.</p>";
+    return;
+  }
+
   showQuestion();
 }
 
+// 📌 SHOW QUESTION
 function showQuestion() {
-  let q = questions[current];
+  let q = filteredQuestions[current];
 
   let html = "<h3>" + q.question + "</h3>";
 
-  for (let i = 0; i < q.options.length; i++) {
-    html += "<button onclick='checkAnswer(" + i + ")'>" + q.options[i] + "</button><br><br>";
-  }
+  q.options.forEach((opt, i) => {
+    html += `<button onclick="checkAnswer(${i})">${opt}</button><br><br>`;
+  });
 
   document.getElementById("quiz-box").innerHTML = html;
 }
 
+// ✅ CHECK ANSWER
 function checkAnswer(choice) {
-  if (choice === questions[current].answer) {
+  if (choice === filteredQuestions[current].answer) {
     score++;
-    alert("Correct!");
+    alert("✅ Correct!");
   } else {
-    alert("Wrong!");
+    alert("❌ Wrong!");
   }
 
   current++;
 
-  if (current < questions.length) {
+  if (current < filteredQuestions.length) {
     showQuestion();
   } else {
     document.getElementById("quiz-box").innerHTML =
-      "<h2>Your score: " + score + "/" + questions.length + "</h2>";
+      `<h2>Final Score: ${score}/${filteredQuestions.length}</h2>`;
   }
 }
+
 </script>
 
 <br>
